@@ -1,31 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Metadata from "../Metadata";
 import { getMovieDetails, getSearchResults } from "../../utils/api";
+import debounce from "lodash.debounce";
 function Search({ addToSelectedMovies }) {
-  const [searchText, setSearchText] = useState("");
+  const searchTextRef = useRef(null);
   const [searchResults, setSearchResults] = useState([]);
   const [selectedResult, setSelectedResult] = useState("");
-  const [movieMetadata, setMovieMetadata] = useState();
+  const [movieMetadata, setMovieMetadata] = useState(null);
   const onAddClick = () => {
     if (addToSelectedMovies) {
       addToSelectedMovies(movieMetadata);
     }
   };
+  const onSearchChange = useCallback(
+    debounce((inputVal) => fetchSearchResults(inputVal), 1000),
+    []
+  );
+  const fetchSearchResults = (searchText) => {
+    setMovieMetadata(null);
+    if (searchText) {
+      getSearchResults(searchText).then((results) => {
+        setSearchResults(results || {Error:"No Movie found!"});
+        if (results && results.length > 0) {
+          setSelectedResult(results[0].imdbID);
+        } 
+      });
+    }
+  };
+
   useEffect(() => {
-    setMovieMetadata(null); // reset metadata when search text changes
-    if(searchText){
-    getSearchResults(searchText).then((results) => {
-      setSearchResults(results);
-      if (results && results.length > 0) {
-        setSelectedResult(results[0].imdbID);
-      }
-    });
-  }
-  }, [searchText]); // get search results when search text changes
-  useEffect(() => {
-    getMovieDetails(selectedResult).then((details) => {
-      setMovieMetadata(details);
-    });
+    if (selectedResult) {
+      getMovieDetails(selectedResult)
+        .then((details) => {
+            setMovieMetadata(details);
+        })
+    }
   }, [selectedResult]); // get metadata once a movie is selected from dropdown
 
   return (
@@ -33,10 +42,10 @@ function Search({ addToSelectedMovies }) {
       <input
         type="text"
         placeholder="Search..."
-        minlength="2"
-        maxlength="15"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
+        minLength="2"
+        maxLength="15"
+        ref={searchTextRef}
+        onChange={(e) => onSearchChange(e.target.value)}
         className="px-2 w-full text-white-900 focus:outline-none focus:ring focus:ring-blue-300"
       />
       {searchResults?.length > 0 && (
@@ -48,12 +57,12 @@ function Search({ addToSelectedMovies }) {
             onChange={(e) => setSelectedResult(e.target.value)}
           >
             {searchResults.map((result) => (
-              <option value={result.imdbID}> {result.Title}</option>
+              <option  key={result.imdbID} value={result.imdbID}> {result.Title}</option>
             ))}
           </select>
         </div>
       )}
-      {movieMetadata && !movieMetadata.Error && (
+      {searchTextRef.current?.value && !searchResults?.Error && movieMetadata && (
         <div>
           <Metadata metadata={movieMetadata} />
           <button
@@ -65,7 +74,10 @@ function Search({ addToSelectedMovies }) {
           </button>
         </div>
       )}
+      {searchTextRef.current?.value && searchResults?.Error && (
+        <div>Sorry, No results found for your search in our database</div>
+      )}
     </div>
   );
 }
-export default React.memo(Search);
+export default Search;
