@@ -13,14 +13,14 @@ function Search({ addToSelectedMovies }) {
     }
   };
   const onSearchChange = useCallback(
-    debounce((inputVal) => fetchSearchResults(inputVal), 1000),
+    debounce((inputVal) => fetchSearchResults(inputVal), 1000), //delay 1 second before making another api call
     []
-  );
+  ); 
   const fetchSearchResults = (searchText) => {
     setMovieMetadata(null);
     if (searchText) {
       getSearchResults(searchText).then((results) => {
-        setSearchResults(results || {Error:"No Movie found!"});
+        setSearchResults(results || {Error:"No Movie found!"}); // set Error if no results found
         if (results && results.length > 0) {
           setSelectedResult(results[0].imdbID);
         } 
