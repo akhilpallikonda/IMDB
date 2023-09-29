@@ -18,9 +18,10 @@ function Search({ addToSelectedMovies }) {
   ); 
   const fetchSearchResults = (searchText) => {
     setMovieMetadata(null);
+    setSelectedResult(null);
     if (searchText) {
       getSearchResults(searchText).then((results) => {
-        setSearchResults(results || {Error:"No Movie found!"}); // set Error if no results found
+        setSearchResults(results); 
         if (results && results.length > 0) {
           setSelectedResult(results[0].imdbID);
         } 

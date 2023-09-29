@@ -13,7 +13,7 @@ function Metadata({ metadata }) {
       <div className="flex flex-col w-2/3 p-2">
         <div className="text-xl font-bold self-center">{metadata.Title}</div>
         <div>
-          <span className="font-bold">IMDb Rating:</span> {metadata.imdbRating}/10
+          <span className="font-bold">IMDb Rating:</span> {isNaN(metadata.imdbRating) ? metadata.imdbRating : metadata.imdbRating+"/10"}
         </div>
         <div>
           <span className="font-bold">Plot: </span>
