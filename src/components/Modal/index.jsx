@@ -1,5 +1,4 @@
 import React, { useState,useRef, useEffect } from "react";
-import "./styles.css";
 function Modal({isOpen, hasCloseButton = false, onClose,children}){
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
     const modalRef = useRef(null);
@@ -23,7 +22,7 @@ function Modal({isOpen, hasCloseButton = false, onClose,children}){
         }
     },[isModalOpen])
     
-    return <dialog ref={modalRef} className="modal"> 
+    return <dialog ref={modalRef} className="w-2/3 min-h-[50%]"> 
     {hasCloseButton && <button className="modal-close-button float-right mr-2 text-2xl" onClick={handleClose}> X </button>}
     {children} 
     </dialog>

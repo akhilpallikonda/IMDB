@@ -66,7 +66,7 @@ function Search({ addToSelectedMovies }) {
         <div>
           <Metadata metadata={movieMetadata} />
           <button
-            className="bg-yellow-300 text-black rounded-md p-2 disabled:bg-gray-300"
+            className="bg-yellow-300 text-black rounded-md p-2 ml-[40%] disabled:bg-gray-300"
             onClick={onAddClick}
             disabled={isNaN(movieMetadata.imdbRating)}
           >

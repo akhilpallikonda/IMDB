@@ -1,5 +1,4 @@
 import React from "react";
-import "./styles.css";
 function Card({ item, removeMovie }) {
   const onDeleteClick = () => {
     if (removeMovie) {
@@ -14,7 +13,7 @@ function Card({ item, removeMovie }) {
       >
         X
       </button>
-      <img src={item.Poster} alt={item.Poster} />
+      <img className="aspect-[2/3]" src={item.Poster} alt={item.Poster} />
       <div tabIndex={1} className="tile-marker truncate">
         {item.Title}
       </div>

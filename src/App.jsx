@@ -38,7 +38,7 @@ function App() {
           onClose={handleClose}
           hasCloseButton={true}
         >
-          <ModalContent addToSelectedMovies={addToSelectedMovies} />
+          {open && <ModalContent addToSelectedMovies={addToSelectedMovies} />}
         </Modal>
       </main>
     </div>
