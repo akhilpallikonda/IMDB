@@ -44,4 +44,4 @@ function Metadata({ metadata }) {
     </div>
   );
 }
-export default React.memo(Metadata);
+export default Metadata;

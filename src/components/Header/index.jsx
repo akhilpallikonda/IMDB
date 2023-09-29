@@ -7,4 +7,4 @@ function Header() {
     </div>
   );
 }
-export default React.memo(Header);
+export default Header;

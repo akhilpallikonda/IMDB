@@ -20,4 +20,4 @@ function Card({ item, removeMovie }) {
     </div>
   );
 }
-export default React.memo(Card);
+export default Card;
