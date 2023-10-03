@@ -1,7 +1,7 @@
 import { getMovieDetailsUrl, getSearchUrl } from "./helpers";
 
-export const getSearchResults = async (searchTerm) => {
-  const response = await fetch(getSearchUrl(searchTerm));
+export const getSearchResults = async (searchTerm,type) => {
+  const response = await fetch(getSearchUrl(searchTerm,type));
   const data = await response.json();
   return data.Search || data;
 };

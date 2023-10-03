@@ -16,6 +16,10 @@ function Metadata({ metadata }) {
           <span className="font-bold">IMDb Rating:</span> {isNaN(metadata.imdbRating) ? metadata.imdbRating : metadata.imdbRating+"/10"}
         </div>
         <div>
+          <span className="font-bold">Type: </span>
+          {metadata.Type}
+        </div>
+        <div>
           <span className="font-bold">Plot: </span>
           {metadata.Plot}
         </div>

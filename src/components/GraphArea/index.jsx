@@ -18,7 +18,7 @@ function CustomizedTooltip({ active, payload, label }) {
 function GraphArea({ data }) {
   return (
     data &&
-    data.length > 1 && (
+    data.length > 0 && (
       <div className="flex justify-center">
         <ResponsiveContainer width="80%" height={350}>
           <BarChart data={data} margin={{ top: 15, right: 30, left: 30, bottom: 5 }}>

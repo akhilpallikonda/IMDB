@@ -4,9 +4,11 @@ import { getMovieDetails, getSearchResults } from "../../utils/api";
 import debounce from "lodash.debounce";
 function Search({ addToSelectedMovies }) {
   const searchTextRef = useRef(null);
+  const [selectedType,setSelectedType] = useState("movie");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedResult, setSelectedResult] = useState("");
   const [movieMetadata, setMovieMetadata] = useState(null);
+  const [hasError,setError] = useState(false);
   const onAddClick = () => {
     if (addToSelectedMovies) {
       addToSelectedMovies(movieMetadata);
@@ -14,18 +16,22 @@ function Search({ addToSelectedMovies }) {
   };
   const onSearchChange = useCallback(
     debounce((inputVal) => fetchSearchResults(inputVal), 1000), //delay 1 second before making another api call
-    []
+    [selectedType]
   ); 
   const fetchSearchResults = (searchText) => {
+    setError(false);
     setMovieMetadata(null);
     setSelectedResult(null);
     if (searchText) {
-      getSearchResults(searchText).then((results) => {
+      getSearchResults(searchText,selectedType).then((results) => {
         setSearchResults(results); 
         if (results && results.length > 0) {
           setSelectedResult(results[0].imdbID);
         } 
-      });
+      }).catch(()=>{
+        setError(true);
+      })
+      ;
     }
   };
 
@@ -34,12 +40,27 @@ function Search({ addToSelectedMovies }) {
       getMovieDetails(selectedResult)
         .then((details) => {
             setMovieMetadata(details);
+        }).catch(()=>{
+          setError(true);
         })
     }
   }, [selectedResult]); // get metadata once a movie is selected from dropdown
 
   return (
     <div className="p-1 header text-l  border">
+      <div className="text-xl">Select type of content</div>
+      <select
+            className="w-full"
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
+          >
+          
+              <option value={"movie"}> Movie </option>
+              <option value={"series"}> Series </option>
+              <option value={"episode"}> Episode </option>
+            
+          </select>
+    <div className="text-xl"> Search for a movie </div>
       <input
         type="text"
         placeholder="Search..."
@@ -49,7 +70,8 @@ function Search({ addToSelectedMovies }) {
         onChange={(e) => onSearchChange(e.target.value)}
         className="px-2 w-full text-white-900 focus:outline-none focus:ring focus:ring-blue-300"
       />
-      {searchResults?.length > 0 && (
+      {hasError && <div> Sorry, There is an error while performing operation. </div>}
+      {searchResults?.length > 0 && !hasError && (
         <div className="border border-4 border-yellow">
           Suggestions
           <select
